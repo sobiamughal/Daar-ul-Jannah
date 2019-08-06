@@ -1,71 +1,144 @@
 package com.example.roubaisha.counter;
 
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Vibrator;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+public class GalleryActivity extends AppCompatActivity implements View.OnClickListener {
 
-public class GalleryActivity extends AppCompatActivity {
+    private SoundPool soundPool;
+    private int tap_sound;
+    private int sound3StreamId;
 
-    Button btn;
-    TextView tv;
-    int count;
+    TextView listdata,tv2;
+    ImageView imageView;
 
-    private static final String TAG = "GalleryActivity";
+    private static final String TAG = "Count_tasbih";
+    Button countAdd,bReset;
+    int counter;
+    SQLiteDatabase db;
+
+    Vibrator vibrator;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
-        Log.d(TAG, "onCreate: started.");
 
+        listdata = findViewById(R.id.listdata);
+        imageView = findViewById(R.id.imageView);
+        Intent intent = getIntent();
+        String receivedName =  intent.getStringExtra("name");
+        int receivedImage = intent.getIntExtra("image",0);
+
+        listdata.setText(receivedName);
+        imageView.setImageResource(receivedImage);
+        //enable back Button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        btn=(Button) findViewById(R.id.btn);
-        tv=(TextView) findViewById(R.id.tv);
-        count=0;
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                count++;
-                tv.setText("Count is: "+count);
+        tv2 = (TextView)findViewById(R.id.tvCountValue);
+        bReset = (Button)findViewById(R.id.bReset);
+        db = openOrCreateDatabase("Tasbih_db", Context.MODE_PRIVATE, null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS tasbih(_id INTEGER PRIMARY KEY,name VARCHAR,count VARCHAR);");
+        Cursor c=db.rawQuery("SELECT * FROM tasbih WHERE name='"+listdata.getText().toString()+"'", null);
+        if(c.moveToFirst()){
+            try {
+                counter = Integer.parseInt(c.getString(2));
+                tv2.setText(String.valueOf(counter));
+            } catch(NumberFormatException nfe) {
+                System.out.println("Could not parse " + nfe);
             }
-        });
 
-        getIncomingIntent();
-    }
-
-    private void getIncomingIntent(){
-        Log.d(TAG, "getIncomingIntent: checking for incoming intents.");
-
-        if(getIntent().hasExtra("image_url") && getIntent().hasExtra("image_name")){
-            Log.d(TAG, "getIncomingIntent: found intent extras.");
-
-            String imageUrl = getIntent().getStringExtra("image_url");
-            String imageName = getIntent().getStringExtra("image_name");
-
-            setImage(imageUrl, imageName);
+        }else{
+            counter = 0;
+            db.execSQL("INSERT INTO tasbih(name , count) VALUES('"+listdata.getText()+"' , '"+counter+"')");
         }
+        countAdd = (Button)findViewById(R.id.bAddCount);
+        countAdd.setOnClickListener(this);
+        bReset.setOnClickListener(this);
+
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(6)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+        } else {
+            soundPool = new SoundPool(6, AudioManager.STREAM_MUSIC, 0);
+        }
+
+        tap_sound = soundPool.load(this, R.raw.tap_sound, 1);
+    }
+
+    public void playSound(View v) {
+        switch (v.getId()) {
+            case R.id.bAddCount:
+                sound3StreamId = soundPool.play(tap_sound, 1, 1, 0, 0, 1);
+                //soundPool.pause(sound3StreamId);
+                soundPool.autoPause();
+                break;
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        soundPool.release();
+        soundPool = null;
     }
 
 
-    private void setImage(String imageUrl, String imageName){
-        Log.d(TAG, "setImage: setting te image and name to widgets.");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
 
-        TextView name = findViewById(R.id.image_description);
-        name.setText(imageName);
-
-        ImageView image = findViewById(R.id.image);
-        Glide.with(this)
-                .asBitmap()
-                .load(imageUrl)
-                .into(image);
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
+    @Override
+    public void onClick(View v) {
+        vibrator.vibrate(50);
+        switch(v.getId()){
+            case R.id.bAddCount:
+                counter ++;
+                tv2.setText(""+counter);
+                String count = Integer.toString(counter);
+                db.execSQL("UPDATE tasbih SET count='"+count+"' WHERE name='"+listdata.getText().toString()+"'");
+                break;
+            case R.id.bReset:
+                counter = 0;
+                String cnt = Integer.toString(counter);
+                tv2.setText(cnt);
+                db.execSQL("UPDATE tasbih SET count='"+cnt+"' WHERE name='"+listdata.getText().toString()+"'");
+                break;
+        }
+
+    }
 }

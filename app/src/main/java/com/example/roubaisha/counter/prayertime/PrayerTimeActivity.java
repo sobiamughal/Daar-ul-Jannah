@@ -1,9 +1,8 @@
 package com.example.roubaisha.counter.prayertime;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +18,6 @@ import com.example.roubaisha.counter.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class PrayerTimeActivity extends AppCompatActivity {
 
@@ -39,6 +37,9 @@ public class PrayerTimeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prayer_time);
+
+        getSupportActionBar().setTitle("Prayer Time");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFajrTv     = (TextView) findViewById(R.id.fajrTv);
         mZuharTv    = (TextView) findViewById(R.id.zuharTv);

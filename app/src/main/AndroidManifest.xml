@@ -6,15 +6,103 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".prayertime.AppController"
         android:allowBackup="true"
+        android:excludeFromRecents="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Names.AllahNamesActivity"></activity>
+        <activity android:name=".PendingPrayerLayerActivity" />
+        <activity android:name=".PendingPrayersActivity" />
+        <activity android:name=".StopAzaan" />
+
+        <service
+            android:name=".Services.PrayerReminderService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=".PrayerReminderService" />
+        <service
+            android:name=".Services.TravelDetectionService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=".TravelDetectionService" />
+        <service android:name=".Services.SoundService" />
+
+        <receiver
+            android:name=".Services.RestartPrayerReminderService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.example.roubaisha.counter.RestartPrayerReminderService" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".Services.RestartTravelDetectionService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.example.roubaisha.counter.RestartTravelDetectionService" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".NotificationActionReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".Services.NotifierService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=".NotifierService" />
+
+        <activity
+            android:name=".NotificationActivity"
+            android:exported="true" />
+
+        <receiver
+            android:name=".yourActivityRunOnStartup"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".StopSound" />
+        <activity android:name=".YesResponse" />
+        <activity android:name=".NoResponse" />
+        <activity android:name=".Map.MapsActivity" /> <!-- <activity android:name=".Prayerguidance.Fajr1" /> -->
+        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".Login_Signup.Login_MainActivity" />
+        <activity android:name=".Login_Signup.Login_form" />
+        <activity android:name=".Login_Signup.Signup_form" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCz4UCmnlDyHo_H_aOAF7yMrCuf0gNghdw" />
@@ -22,7 +110,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".HomeActivity">
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,10 +133,14 @@
             android:name=".PrayerGuidance"
             android:label="@string/title_activity_prayer_guidance"
             android:parentActivityName=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".NearestMosque" />
-        <activity android:name=".MapActivity" />
-        <activity android:name=".prayertime.PrayerTimeActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- <activity -->
+        <!-- android:name=".MapActivity" -->
+        <!-- android:parentActivityName=".MoreActivity" /> -->
+        <activity
+            android:name=".prayertime.PrayerTimeActivity"
+            android:parentActivityName=".MoreActivity" />
+        <activity android:name=".duaen.Duaen" />
+        <activity android:name=".duaen.D_ListActivity" />
     </application>
 
 </manifest>

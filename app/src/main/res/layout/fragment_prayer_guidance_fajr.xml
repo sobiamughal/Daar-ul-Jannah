@@ -16,7 +16,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="156dp"
         android:text="@string/pgfajrbtn1"
-        android:textColor="#894716"/>
+        android:textColor="#894716"
+        android:onClick="btnfjr1"/>
 
     <Button
         android:id="@+id/pgfajrbtn2"
@@ -26,5 +27,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/pgfajrbtn2"
-        android:textColor="#894716"/>
+        android:textColor="#894716"
+        android:onClick="btnfjr2"/>
 </RelativeLayout>

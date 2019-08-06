@@ -7,11 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.roubaisha.counter.Map.MapsActivity;
+import com.example.roubaisha.counter.Names.AllahNamesActivity;
+import com.example.roubaisha.counter.duaen.Duaen;
 import com.example.roubaisha.counter.prayertime.PrayerTimeActivity;
 
 public class MoreActivity extends AppCompatActivity {
@@ -22,6 +24,9 @@ public class MoreActivity extends AppCompatActivity {
     private CardView tasbihbtn;
     private CardView nearestmosquebtn;
     private CardView prayertimebtn;
+    private CardView duaenbtn;
+    private CardView pendingprayerbtn;
+    private CardView namesbtn;
 
 
     @Override
@@ -44,6 +49,15 @@ public class MoreActivity extends AppCompatActivity {
             }
         });
         tasbihbtn=(CardView)findViewById(R.id.tasbihbtn);
+        pendingprayerbtn = (CardView)findViewById(R.id.pendingprayerbtn);
+        namesbtn = (CardView)findViewById(R.id.namesbtn);
+
+        namesbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNamesActivity();
+            }
+        });
         tasbihbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,13 +78,22 @@ public class MoreActivity extends AppCompatActivity {
                 openPrayerTimeActivity();
             }
         });
+        duaenbtn=(CardView)findViewById(R.id.duaenbtn);
+        duaenbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDuaenActivity();
+            }
+        });
 
-
+        pendingprayerbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPendingPrayerActivity();
+            }
+        });
 
         TextView title=(TextView)findViewById(R.id.more_tv);
-        title.setText("This is Activity More");
-
-
 
         /*Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = menu.getItem(0);
@@ -103,6 +126,11 @@ public class MoreActivity extends AppCompatActivity {
 
     }
 
+    private void openNamesActivity() {
+        Intent intent = new Intent(this, AllahNamesActivity.class);
+        startActivity(intent);
+    }
+
     public void openCalendarActivity(){
         Intent intent = new Intent(this, CalendarActivity.class);
         startActivity(intent);
@@ -116,11 +144,19 @@ public class MoreActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void openNearestMosqueActivity(){
-        Intent intent = new Intent(this, NearestMosque.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
     public void openPrayerTimeActivity(){
         Intent intent = new Intent(this, PrayerTimeActivity.class);
+        startActivity(intent);
+    }
+    public void openDuaenActivity(){
+        Intent intent = new Intent(this, Duaen.class);
+        startActivity(intent);
+    }
+    public void openPendingPrayerActivity(){
+        Intent intent = new Intent(this, PendingPrayerLayerActivity.class);
         startActivity(intent);
     }
 }

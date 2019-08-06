@@ -1,115 +1,75 @@
 package com.example.roubaisha.counter;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class TasbihActivity extends AppCompatActivity {
+    ListView listView;
 
-    BottomNavigationView bottomNavigationView;
-
-    private static final String TAG = "MainActivity";
-
-    //vars
-    private ArrayList<String> mNames = new ArrayList<>();
-    private ArrayList<String> mImageUrls = new ArrayList<>();
-
-
-
+    String[] tasbihNames = {"SubhanAllah","Alhamdulilah","Astaghfirullah","Allah u Akbar","SubhanAllahi wa biHamdihi","La ilaha illa-llah"};
+    int[] tasbihImages = {R.drawable.subhanallah,R.drawable.alhamdullillah,R.drawable.astagfirullah,R.drawable.allah_hu_akbar,R.drawable.subhanallah_wa_bihamdihi,R.drawable.la_ilaha_illa_llah};
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasbih);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //finding listview
+        listView = findViewById(R.id.listview);
 
-        /*TextView title=(TextView)findViewById(R.id.tasbih_tv);
-        title.setText("This is Activity Tasbeeh");*/
-
-        /*Menu menu = bottomNavigationView.getMenu();
-        MenuItem menuItem = menu.getItem(0);
-        menuItem.setChecked(true);*/
-
-        bottomNavigationView=(BottomNavigationView)findViewById(R.id.bottomNavView_Bar);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        CustomAdapter customAdapter = new CustomAdapter();
+        listView.setAdapter(customAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Toast.makeText(getApplicationContext(),tasbihNames[i],Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(),GalleryActivity.class);
+                intent.putExtra("name",tasbihNames[i]);
+                intent.putExtra("image",tasbihImages[i]);
+                startActivity(intent);
 
-                    case R.id.ic_home:
-                        Intent intent0 = new Intent(TasbihActivity.this, HomeActivity.class);
-                        startActivity(intent0);
-                        break;
-                    case R.id.ic_tasbih:
-                        break;
-                    case R.id.ic_more:
-                        Intent intent2 = new Intent(TasbihActivity.this, MoreActivity.class);
-                        startActivity(intent2);
-                        break;
-                }
-
-
-                return false;
             }
         });
 
-        Log.d(TAG, "onCreate: started.");
 
-        initImageBitmaps();
     }
 
-    private void initImageBitmaps(){
-        Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
+    private class CustomAdapter extends BaseAdapter{
+        @Override
+        public int getCount() {
+            return tasbihImages.length;
+        }
 
-        mImageUrls.add("https://i.pinimg.com/originals/ad/54/e0/ad54e040ea009787770656c2a90c4341.jpg");
-        mNames.add("Subhan Allah");
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
 
-        mImageUrls.add("https://i.pinimg.com/originals/73/21/c4/7321c404ccfb6f601cf927de1be6db35.png");
-        mNames.add("Alhumdulilah");
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
 
-        mImageUrls.add("https://i.kym-cdn.com/photos/images/newsfeed/000/868/258/f7a.jpeg");
-        mNames.add("Allah o Akbar");
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            View view1 = getLayoutInflater().inflate(R.layout.layout_listitem,null);
+            //getting view in row_data
+            TextView name = view1.findViewById(R.id.fruits);
+            ImageView image = view1.findViewById(R.id.images);
 
-        mImageUrls.add("https://maldivesindependent.com/files/2016/07/Screen-Shot-2016-07-14-at-09.31.11.png");
-        mNames.add("Astagfirullah");
-
-
-        mImageUrls.add("https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjqpZLaqdXgAhU6DGMBHVmcDbcQjRx6BAgBEAU&url=https%3A%2F%2Fwww.kisspng.com%2Fpng-subhan-allah-god-in-islam-inshallah-vector-masjid-5261541%2F&psig=AOvVaw07_NkXdMUhBuqjaHj4GHFu&ust=1551130518185801");
-        mNames.add("Subhan Allah");
-
-        mImageUrls.add("https://i.pinimg.com/originals/73/21/c4/7321c404ccfb6f601cf927de1be6db35.png");
-        mNames.add("Alhumdulilah");
+            name.setText(tasbihNames[i]);
+            image.setImageResource(tasbihImages[i]);
+            return view1;
 
 
-        mImageUrls.add("https://maldivesindependent.com/files/2016/07/Screen-Shot-2016-07-14-at-09.31.11.png");
-        mNames.add("Astagfirullah");
 
-        mImageUrls.add("https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjqpZLaqdXgAhU6DGMBHVmcDbcQjRx6BAgBEAU&url=https%3A%2F%2Fwww.kisspng.com%2Fpng-subhan-allah-god-in-islam-inshallah-vector-masjid-5261541%2F&psig=AOvVaw07_NkXdMUhBuqjaHj4GHFu&ust=1551130518185801");
-        mNames.add("Subhan Allah");
-
-        mImageUrls.add("https://i.kym-cdn.com/photos/images/newsfeed/000/868/258/f7a.jpeg");
-        mNames.add("Allah o Akbar");
-
-        initRecyclerView();
-    }
-
-    private void initRecyclerView(){
-        Log.d(TAG, "initRecyclerView: init recyclerview.");
-        RecyclerView recyclerView = findViewById(R.id.recyclerv_view);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mNames, mImageUrls);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }
     }
 }

@@ -9,65 +9,54 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".4">
 
                 <ImageView
+                    android:id="@+id/imageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/image"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_launcher"/>
-
-
+                    android:src="@drawable/subhanallah" />
         </RelativeLayout>
-
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".6">
 
-
                 <TextView
-                    android:id="@+id/tv"
+                    android:id="@+id/listdata"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="SubhanAllah"
+                    android:textColor="#000"
+                    android:textSize="25sp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/tvCountValue"
+                    android:layout_width="290dp"
+                    android:layout_height="40dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="7dp"
                     android:layout_marginLeft="7dp"
                     android:layout_marginBottom="15dp"
-                    android:text="0"
+                    android:hint="Count is: "
                     android:textSize="30sp" />
 
-            <TextView
-                android:id="@+id/image_description"
-                android:layout_width="264dp"
-                android:layout_height="27dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="38dp"
-                android:layout_marginLeft="38dp"
-                android:layout_marginTop="11dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginBottom="58dp"
-                android:text="Count is:"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textSize="20sp" />
-
-
-
+                <Button
+                    android:id="@+id/bReset"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignBottom="@id/tvCountValue"
+                    android:layout_alignParentRight="true"
+                    android:background="@android:color/transparent"
+                    android:drawableRight="@drawable/ic_reset_icon" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -76,12 +65,11 @@
             android:layout_weight=".5">
 
                 <Button
-                    android:id="@+id/btn"
+                    android:id="@+id/bAddCount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
                     android:text="Count" />
-
         </RelativeLayout>
 
 </LinearLayout>

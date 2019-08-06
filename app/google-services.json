@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "975456072424",
+    "firebase_url": "https://daar-ul-jannah-f6f44.firebaseio.com",
+    "project_id": "daar-ul-jannah-f6f44",
+    "storage_bucket": "daar-ul-jannah-f6f44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975456072424:android:55a2fa80cef75ec0",
+        "android_client_info": {
+          "package_name": "com.example.roubaisha.counter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975456072424-dm35p313lb1eggcl27psp0o41cl9le5j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.roubaisha.counter",
+            "certificate_hash": "a3f399acb5b720c82d658a0166703618bb60df4f"
+          }
+        },
+        {
+          "client_id": "975456072424-m2d9qumdnedhlgr2tocce16kj0qj5u6m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIa-IhwlNcOmya4-604jl3iLaG6QkeTdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975456072424-m2d9qumdnedhlgr2tocce16kj0qj5u6m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

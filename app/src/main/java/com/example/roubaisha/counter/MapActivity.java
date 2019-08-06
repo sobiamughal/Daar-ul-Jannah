@@ -1,16 +1,19 @@
-package com.example.roubaisha.counter;
+/*package com.example.roubaisha.counter;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,14 +24,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.gcm.Task;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 
@@ -36,8 +44,37 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+    private static final int ERROR_DIALOG_REQUESRT = 9001;
+    private Location lastLocation;
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
+    private Marker currentUserLocationMarker;
+    private static  final int Request_User_Location_Code=99;
 
+
+    public void onClick(View v){
+        switch (v.getId()){
+            case R.id.search_address:
+                EditText addressField = (EditText) findViewById(R.id.input_search);
+                String address = addressField.getText().toString();
+                List<Address> addressList=null;
+                MarkerOptions userMarkerOptions = new MarkerOptions();
+                if (TextUtils.isEmpty(address)){
+                    Geocoder geocoder = new Geocoder(this);
+                    try {
+                        addressList = geocoder.getFromLocationName(address, 6);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    for (int i=0; i<addressList.size(); i++){
+                        Address userAddress = addressList.get(i);
+                        LatLng latLng = new LatLng(userAddress.getLatitude(),userAddress.getLongitude());
+
+                    }
+                }
+        }
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -77,13 +114,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.activity_maps);
+
+        getSupportActionBar().setTitle("Nearest Mosque");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mSearchText=(EditText)findViewById(R.id.input_search);
         mGps = (ImageView)findViewById(R.id.ic_gps);
 
         getLocationPermission();
         init();
+        isServiceOK();
 
+    }
+
+    private boolean isServiceOK() {
+        Log.d(TAG,"isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MapActivity.this);
+
+        if (available == ConnectionResult.SUCCESS){
+            //everything is fine and the user can make map requests
+            Log.d(TAG,"is ServicesOK: Google Play Service is working ");
+            return true;
+        }
+        else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //an error occured but we can resolve it
+            Log.d(TAG,"is ServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MapActivity.this, available, ERROR_DIALOG_REQUESRT);
+            dialog.show();
+        }else{
+            Toast.makeText(this,"You can't make map request",Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     private void init(){
@@ -122,7 +185,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Geocoder geocoder = new Geocoder(MapActivity.this);
         List<Address> list = new ArrayList<>();
         try{
-            list = geocoder.getFromLocationName(searchString, 1);
+            list = geocoder.getFromLocationName(searchString, character2);
         }catch (IOException e){
             Log.e(TAG, "geoLocate: IOException: "+ e.getMessage() );
         }
@@ -224,4 +287,58 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void hideSoftKeyboard(){
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        lastLocation = location;
+        if (currentUserLocationMarker != null){
+            currentUserLocationMarker.remove();
+        }
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("user current location");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+        currentUserLocationMarker = mMap.addMarker(markerOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(14));
+
+        if (googleApiClient != null){
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, (com.google.android.gms.location.LocationListener) this);
+
+        }
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }
+*/

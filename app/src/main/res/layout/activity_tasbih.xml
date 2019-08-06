@@ -7,56 +7,10 @@
     android:background="#e9bd70"
     tools:context=".TasbihActivity">
 
-    <!--<TextView
-        android:id="@+id/tasbih_tv"
+    <ListView
+        android:id="@+id/listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tasbeeh"
-        android:textSize="30sp"/>-->
-    <RelativeLayout
-        android:id="@+id/relLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <LinearLayout
-            android:id="@+id/middleBar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottomBar"
-            android:orientation="horizontal">
-
-
-            <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/recyclerv_view">
-
-            </android.support.v7.widget.RecyclerView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/bottomBar"
-            android:layout_alignParentBottom="true">
-
-            <android.support.design.widget.BottomNavigationView
-                android:id="@+id/bottomNavView_Bar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:background="#fff"
-                app:menu="@menu/bottom_navigation_menu">
-
-            </android.support.design.widget.BottomNavigationView>
-        </LinearLayout>
-
-
-
-
-    </RelativeLayout>
+        android:layout_height="wrap_content"></ListView>
 
 
 </android.support.design.widget.CoordinatorLayout>
